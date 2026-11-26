@@ -6,7 +6,7 @@
             <a href="{{ route('admin.categories.index') }}" class="text-xs font-semibold text-teal-600 hover:text-teal-700 flex items-center gap-1 mb-2">
                 ← Back to Categories
             </a>
-            <h1 class="text-xl font-bold text-slate-900">Add Category / Subcategory</h1>
+            <h1 class="text-xl font-bold text-slate-900">Add Category</h1>
             <p class="text-xs text-slate-500 mt-0.5">Define a global material category or nest it under a parent</p>
         </div>
 
@@ -14,7 +14,7 @@
             <form action="{{ route('admin.categories.store') }}" method="POST" class="space-y-4">
                 @csrf
 
-                <div>
+                {{-- <div>
                     <label class="block text-xs font-bold text-slate-700 mb-1">Parent Category (Optional)</label>
                     <select name="parent_id" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:bg-white focus:outline-none focus:ring-2 focus:ring-teal-500">
                         <option value="">— None (This will be a Top-Level Category) —</option>
@@ -25,7 +25,7 @@
                         @endforeach
                     </select>
                     <p class="text-[11px] text-slate-400 mt-1">Leave empty to create a top-level department like Cement, Steel, Paints.</p>
-                </div>
+                </div> --}}
 
                 <div>
                     <label class="block text-xs font-bold text-slate-700 mb-1">Category Name *</label>
@@ -46,11 +46,11 @@
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
+                    {{-- <div>
                         <label class="block text-xs font-bold text-slate-700 mb-1">Display Sort Order</label>
                         <input type="number" name="sort_order" value="{{ old('sort_order', 0) }}" min="0"
                             class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:bg-white focus:outline-none focus:ring-2 focus:ring-teal-500">
-                    </div>
+                    </div> --}}
                     <div>
                         <label class="block text-xs font-bold text-slate-700 mb-1">Status</label>
                         <select name="status" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:bg-white focus:outline-none focus:ring-2 focus:ring-teal-500">

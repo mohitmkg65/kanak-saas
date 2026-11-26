@@ -50,11 +50,9 @@ class CategoryController extends Controller
     public function store(StoreCategoryRequest $request): RedirectResponse
     {
         $data = $request->validated();
-
         if (empty($data['slug'])) {
             $data['slug'] = Str::slug($data['name']).'-'.Str::lower(Str::random(5));
         }
-
         $data['created_by'] = Auth::id();
 
         $category = Category::create($data);

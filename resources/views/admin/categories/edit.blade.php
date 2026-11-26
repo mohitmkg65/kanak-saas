@@ -15,7 +15,7 @@
                 @csrf
                 @method('PUT')
 
-                <div>
+                {{-- <div>
                     <label class="block text-xs font-bold text-slate-700 mb-1">Parent Category</label>
                     <select name="parent_id" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:bg-white focus:outline-none focus:ring-2 focus:ring-teal-500">
                         <option value="">— None (Top-Level Category) —</option>
@@ -25,7 +25,7 @@
                             </option>
                         @endforeach
                     </select>
-                </div>
+                </div> --}}
 
                 <div>
                     <label class="block text-xs font-bold text-slate-700 mb-1">Category Name *</label>
@@ -46,11 +46,11 @@
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
+                    {{-- <div>
                         <label class="block text-xs font-bold text-slate-700 mb-1">Display Sort Order</label>
                         <input type="number" name="sort_order" value="{{ old('sort_order', $category->sort_order) }}" min="0"
                             class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:bg-white focus:outline-none focus:ring-2 focus:ring-teal-500">
-                    </div>
+                    </div> --}}
                     <div>
                         <label class="block text-xs font-bold text-slate-700 mb-1">Status</label>
                         <select name="status" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:bg-white focus:outline-none focus:ring-2 focus:ring-teal-500">

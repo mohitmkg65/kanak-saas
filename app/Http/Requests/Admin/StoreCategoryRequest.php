@@ -17,8 +17,8 @@ class StoreCategoryRequest extends FormRequest
             'name' => ['required', 'string', 'max:255'],
             'slug' => ['nullable', 'string', 'max:255', 'unique:categories,slug'],
             'description' => ['nullable', 'string'],
-            'parent_id' => ['nullable', 'integer', 'exists:categories,id'],
-            'sort_order' => ['nullable', 'integer', 'min:0'],
+            // 'parent_id' => ['nullable', 'integer', 'exists:categories,id'],
+            // 'sort_order' => ['nullable', 'integer', 'min:0'],
             'status' => ['required', 'string', 'in:active,inactive'],
         ];
     }
