@@ -19,25 +19,14 @@ class CategoryController extends Controller
 
     public function index(Request $request): View
     {
-        $query = Category::with('parent')->withCount('children', 'products');
+        $categories = $this->getCategoriesQuery($request);
 
-        if ($search = $request->input('search')) {
-            $query->where('name', 'like', "%{$search}%");
+        $editingCategory = null;
+        if ($editId = $request->input('edit')) {
+            $editingCategory = Category::where('public_id', $editId)->orWhere('id', $editId)->first();
         }
 
-        if ($request->input('type') === 'parent') {
-            $query->parents();
-        } elseif ($request->input('type') === 'subcategory') {
-            $query->whereNotNull('parent_id');
-        }
-
-        if ($status = $request->input('status')) {
-            $query->where('status', $status);
-        }
-
-        $categories = $query->orderBy('sort_order')->orderBy('name')->paginate(20)->withQueryString();
-
-        return view('admin.categories.index', compact('categories'));
+        return view('admin.categories.index', compact('categories', 'editingCategory'));
     }
 
     public function create(): View
@@ -68,11 +57,33 @@ class CategoryController extends Controller
         return redirect()->route('admin.categories.index')->with('success', 'Category created successfully.');
     }
 
-    public function edit(Category $category): View
+    public function edit(Request $request, Category $category): View
     {
-        $parentCategories = Category::parents()->active()->where('id', '!=', $category->id)->orderBy('name')->get();
+        $categories = $this->getCategoriesQuery($request);
+        $editingCategory = $category;
 
-        return view('admin.categories.edit', compact('category', 'parentCategories'));
+        return view('admin.categories.index', compact('categories', 'editingCategory'));
+    }
+
+    protected function getCategoriesQuery(Request $request)
+    {
+        $query = Category::with('parent')->withCount('children', 'products');
+
+        if ($search = $request->input('search')) {
+            $query->where('name', 'like', "%{$search}%");
+        }
+
+        if ($request->input('type') === 'parent') {
+            $query->parents();
+        } elseif ($request->input('type') === 'subcategory') {
+            $query->whereNotNull('parent_id');
+        }
+
+        if ($status = $request->input('status')) {
+            $query->where('status', $status);
+        }
+
+        return $query->orderBy('sort_order')->orderBy('name')->paginate(20)->withQueryString();
     }
 
     public function update(UpdateCategoryRequest $request, Category $category): RedirectResponse

@@ -20,16 +20,38 @@ beforeEach(function () {
 });
 
 test('super admin can view categories list and create page', function () {
-    Category::factory()->create(['name' => 'Cement & Concrete']);
+    $category = Category::factory()->create(['name' => 'Cement & Concrete']);
 
     $response = $this->actingAs($this->admin)->get(route('admin.categories.index'));
     $response->assertOk();
     $response->assertSee('Cement &amp; Concrete', false);
     $response->assertSee('Categories &amp; Subcategories', false);
+    $response->assertSee('Add Category');
+    $response->assertSee('Save Category');
+
+    // Test edit mode on 2-part index page
+    $editPageResponse = $this->actingAs($this->admin)->get(route('admin.categories.index', ['edit' => $category->public_id]));
+    $editPageResponse->assertOk();
+    $editPageResponse->assertSee('Edit Category: Cement &amp; Concrete', false);
+    $editPageResponse->assertSee('Update Category');
+
+    // Direct edit route renders 2-part index page at /admin/categories/{category}/edit
+    $editRouteResponse = $this->actingAs($this->admin)->get(route('admin.categories.edit', $category));
+    $editRouteResponse->assertOk();
+    $editRouteResponse->assertSee('Edit Category: Cement &amp; Concrete', false);
+    $editRouteResponse->assertSee('Update Category');
+
+    // Updating category redirects back to the category index page
+    $updateResponse = $this->actingAs($this->admin)->put(route('admin.categories.update', $category), [
+        'name' => 'Cement & Concrete Updated',
+        'slug' => 'cement-concrete-updated',
+        'status' => 'active',
+    ]);
+    $updateResponse->assertRedirect(route('admin.categories.index'));
 
     $createResponse = $this->actingAs($this->admin)->get(route('admin.categories.create'));
     $createResponse->assertOk();
-    $createResponse->assertSee('Add Category / Subcategory');
+    $createResponse->assertSee('Add Category');
 });
 
 test('super admin can view units list and create page', function () {
