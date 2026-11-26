@@ -1,17 +1,17 @@
 @extends('layouts.admin', ['title' => 'Categories & Subcategories', 'header' => 'Master Data: Categories'])
 
 @section('content')
-    <div class="mb-6">
+    <div class="mb-2">
         <h1 class="text-xl font-bold text-slate-900">Categories & Subcategories</h1>
         <p class="text-xs text-slate-500 mt-0.5">Hierarchical building material taxonomy (Cement, Steel, Tiles, Paints, etc.)</p>
     </div>
 
     <!-- 2-Part Layout: Col-4 (Form) & Col-8 (Table) -->
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
         
         <!-- Col-4: Input Forms to Add & Edit Categories -->
         <div class="lg:col-span-4">
-            <div class="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-xs sticky top-20">
+            <div class="bg-white rounded-2xl border border-slate-200/80 p-4 shadow-xs sticky top-20">
                 <div class="flex items-center justify-between mb-4">
                     <div>
                         <h2 id="form-title" class="text-base font-bold text-slate-900">
@@ -192,35 +192,37 @@
                                             {{ ucfirst($category->status) }}
                                         </span>
                                     </td>
-                                    <td class="px-6 py-4 text-right space-x-2">
-                                        <a href="{{ route('admin.categories.edit', $category) }}"
-                                            class="edit-category-btn text-teal-600 hover:text-teal-800 transition p-1 rounded-lg hover:bg-teal-50 inline-block"
-                                            title="Edit Category"
-                                            data-id="{{ $category->public_id }}"
-                                            data-name="{{ $category->name }}"
-                                            data-slug="{{ $category->slug }}"
-                                            data-description="{{ $category->description ?? '' }}"
-                                            data-status="{{ $category->status }}"
-                                            data-action="{{ route('admin.categories.update', $category) }}"
-                                            data-edit-url="{{ route('admin.categories.edit', $category) }}">
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
-                                                viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                                <path stroke-linecap="round" stroke-linejoin="round"
-                                                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/>
-                                            </svg>
-                                        </a>
-                                        <form action="{{ route('admin.categories.destroy', $category) }}" method="POST" class="inline" onsubmit="return confirm('Are you sure you want to delete category {{ $category->name }}?')">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="text-rose-600 hover:text-rose-800 transition p-1 rounded-lg hover:bg-rose-50" title="Delete Category">
-                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5"
-                                                    fill="none" viewBox="0 0 24 24"
-                                                    stroke="currentColor" stroke-width="2">
+                                    <td class="px-6 py-4 text-right">
+                                        <div class="inline-flex items-center justify-end gap-1">
+                                            <a href="{{ route('admin.categories.edit', $category) }}"
+                                                class="edit-category-btn inline-flex items-center justify-center p-1 text-teal-600 hover:text-teal-800 transition rounded-lg hover:bg-teal-50"
+                                                title="Edit Category"
+                                                data-id="{{ $category->public_id }}"
+                                                data-name="{{ $category->name }}"
+                                                data-slug="{{ $category->slug }}"
+                                                data-description="{{ $category->description ?? '' }}"
+                                                data-status="{{ $category->status }}"
+                                                data-action="{{ route('admin.categories.update', $category) }}"
+                                                data-edit-url="{{ route('admin.categories.edit', $category) }}">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
+                                                    viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                                     <path stroke-linecap="round" stroke-linejoin="round"
-                                                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6M9 7V4a1 1 0 011-1h4a1 1 0 011 1v3M4 7h16"/>
+                                                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/>
                                                 </svg>
-                                            </button>
-                                        </form>
+                                            </a>
+                                            <form action="{{ route('admin.categories.destroy', $category) }}" method="POST" class="inline-flex items-center m-0 p-0" onsubmit="return confirm('Are you sure you want to delete category {{ $category->name }}?')">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="inline-flex items-center justify-center p-1 text-rose-600 hover:text-rose-800 transition rounded-lg hover:bg-rose-50" title="Delete Category">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5"
+                                                        fill="none" viewBox="0 0 24 24"
+                                                        stroke="currentColor" stroke-width="2">
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6M9 7V4a1 1 0 011-1h4a1 1 0 011 1v3M4 7h16"/>
+                                                    </svg>
+                                                </button>
+                                            </form>
+                                        </div>
                                     </td>
                                 </tr>
                             @empty

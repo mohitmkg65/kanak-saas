@@ -153,7 +153,7 @@
             </header>
 
             <!-- Page Body -->
-            <main class="flex-1 p-4 sm:p-8">
+            <main class="flex-1 p-4 sm:p-4">
                 @if (session('success'))
                     <div class="mb-6 p-4 bg-teal-50 border border-teal-200 text-teal-800 rounded-xl text-sm flex items-center gap-3">
                         <span class="w-6 h-6 rounded-full bg-teal-600 text-white flex items-center justify-center font-bold text-xs">✓</span>

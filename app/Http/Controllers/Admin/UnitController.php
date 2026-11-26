@@ -19,20 +19,15 @@ class UnitController extends Controller
 
     public function index(Request $request): View
     {
-        $query = Unit::with('categories')->withCount('products');
+        $units = $this->getUnitsQuery($request);
+        $categories = Category::active()->with('children')->parents()->orderBy('sort_order')->orderBy('name')->get();
 
-        if ($search = $request->input('search')) {
-            $query->where('name', 'like', "%{$search}%")
-                ->orWhere('abbreviation', 'like', "%{$search}%");
+        $editingUnit = null;
+        if ($editId = $request->input('edit')) {
+            $editingUnit = Unit::with('categories')->where('public_id', $editId)->orWhere('id', $editId)->first();
         }
 
-        if ($status = $request->input('status')) {
-            $query->where('status', $status);
-        }
-
-        $units = $query->orderBy('name')->paginate(20)->withQueryString();
-
-        return view('admin.units.index', compact('units'));
+        return view('admin.units.index', compact('units', 'categories', 'editingUnit'));
     }
 
     public function create(): View
@@ -65,12 +60,30 @@ class UnitController extends Controller
         return redirect()->route('admin.units.index')->with('success', 'Unit of measure created successfully.');
     }
 
-    public function edit(Unit $unit): View
+    public function edit(Request $request, Unit $unit): View
     {
         $unit->load('categories');
+        $units = $this->getUnitsQuery($request);
         $categories = Category::active()->with('children')->parents()->orderBy('sort_order')->orderBy('name')->get();
+        $editingUnit = $unit;
 
-        return view('admin.units.edit', compact('unit', 'categories'));
+        return view('admin.units.index', compact('units', 'categories', 'editingUnit'));
+    }
+
+    protected function getUnitsQuery(Request $request)
+    {
+        $query = Unit::with('categories')->withCount('products');
+
+        if ($search = $request->input('search')) {
+            $query->where('name', 'like', "%{$search}%")
+                ->orWhere('abbreviation', 'like', "%{$search}%");
+        }
+
+        if ($status = $request->input('status')) {
+            $query->where('status', $status);
+        }
+
+        return $query->orderBy('name')->paginate(20)->withQueryString();
     }
 
     public function update(UpdateUnitRequest $request, Unit $unit): RedirectResponse

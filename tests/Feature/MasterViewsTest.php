@@ -55,12 +55,27 @@ test('super admin can view categories list and create page', function () {
 });
 
 test('super admin can view units list and create page', function () {
-    Unit::factory()->create(['name' => 'Metric Ton Test', 'abbreviation' => 'MTT']);
+    $unit = Unit::factory()->create(['name' => 'Metric Ton Test', 'abbreviation' => 'MTT']);
 
     $response = $this->actingAs($this->admin)->get(route('admin.units.index'));
     $response->assertOk();
     $response->assertSee('Metric Ton Test');
     $response->assertSee('MTT');
+    $response->assertSee('Add Unit of Measure');
+    $response->assertSee('Save Unit');
+    $response->assertSee('Applicable Categories');
+
+    // Test edit mode on 2-part index page
+    $editPageResponse = $this->actingAs($this->admin)->get(route('admin.units.index', ['edit' => $unit->public_id]));
+    $editPageResponse->assertOk();
+    $editPageResponse->assertSee('Edit Unit: Metric Ton Test');
+    $editPageResponse->assertSee('Update Unit');
+
+    // Direct edit route renders 2-part index page at /admin/units/{unit}/edit
+    $editRouteResponse = $this->actingAs($this->admin)->get(route('admin.units.edit', $unit));
+    $editRouteResponse->assertOk();
+    $editRouteResponse->assertSee('Edit Unit: Metric Ton Test');
+    $editRouteResponse->assertSee('Update Unit');
 
     $createResponse = $this->actingAs($this->admin)->get(route('admin.units.create'));
     $createResponse->assertOk();
