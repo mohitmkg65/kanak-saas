@@ -4,6 +4,8 @@ namespace Database\Factories;
 
 use App\Enums\OrganizationApprovalStatus;
 use App\Enums\OrganizationStatus;
+use App\Enums\OrganizationSubscriptionStatus;
+use App\Enums\RegistrationSource;
 use App\Models\Organization;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
@@ -31,6 +33,8 @@ class OrganizationFactory extends Factory
             'postal_code' => fake()->postcode(),
             'status' => OrganizationStatus::ACTIVE->value,
             'approval_status' => OrganizationApprovalStatus::Approved->value,
+            'subscription_status' => OrganizationSubscriptionStatus::Trialing->value,
+            'registration_source' => RegistrationSource::AdminCreated->value,
             'approved_at' => now(),
             'currency' => 'INR',
             'timezone' => 'Asia/Kolkata',

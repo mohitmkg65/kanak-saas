@@ -33,9 +33,11 @@ Route::middleware(['auth', 'super.admin'])->prefix('admin')->name('admin.')->gro
     // Organizations — with approval workflow actions
     Route::resource('organizations', Admin\OrganizationController::class);
     Route::post('organizations/{organization}/approve', [Admin\OrganizationController::class, 'approve'])->name('organizations.approve');
+    Route::post('organizations/{organization}/reapprove', [Admin\OrganizationController::class, 'reapprove'])->name('organizations.reapprove');
     Route::post('organizations/{organization}/reject', [Admin\OrganizationController::class, 'reject'])->name('organizations.reject');
     Route::post('organizations/{organization}/review', [Admin\OrganizationController::class, 'markUnderReview'])->name('organizations.review');
     Route::post('organizations/{organization}/suspend', [Admin\OrganizationController::class, 'suspend'])->name('organizations.suspend');
+    Route::post('organizations/{organization}/reactivate', [Admin\OrganizationController::class, 'reactivate'])->name('organizations.reactivate');
 
     Route::resource('users', Admin\UserController::class)->except(['show', 'destroy']);
     Route::resource('roles', Admin\RoleController::class)->except(['show']);

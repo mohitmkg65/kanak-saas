@@ -3,6 +3,8 @@
 namespace Database\Seeders;
 
 use App\Enums\OrganizationApprovalStatus;
+use App\Enums\OrganizationSubscriptionStatus;
+use App\Enums\RegistrationSource;
 use App\Enums\RoleScope;
 use App\Models\Organization;
 use App\Models\OrganizationMembership;
@@ -77,6 +79,8 @@ class OrganizationSeeder extends Seeder
                 'country' => 'India',
                 'status' => 'active',
                 'approval_status' => OrganizationApprovalStatus::Approved->value,
+                'subscription_status' => OrganizationSubscriptionStatus::Active->value,
+                'registration_source' => RegistrationSource::AdminCreated->value,
                 'approved_at' => now(),
                 'currency' => 'INR',
                 'timezone' => 'Asia/Kolkata',
@@ -127,6 +131,8 @@ class OrganizationSeeder extends Seeder
                 'country' => 'India',
                 'status' => 'active',
                 'approval_status' => OrganizationApprovalStatus::Approved->value,
+                'subscription_status' => OrganizationSubscriptionStatus::Active->value,
+                'registration_source' => RegistrationSource::AdminCreated->value,
                 'approved_at' => now(),
                 'currency' => 'INR',
                 'timezone' => 'Asia/Kolkata',

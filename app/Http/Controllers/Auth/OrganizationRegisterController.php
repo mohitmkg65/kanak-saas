@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Enums\OrganizationApprovalStatus;
+use App\Enums\OrganizationSubscriptionStatus;
+use App\Enums\RegistrationSource;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\RegisterOrganizationRequest;
 use App\Models\Organization;
@@ -28,7 +30,7 @@ class OrganizationRegisterController extends Controller
     {
         $data = $request->validated();
 
-        DB::transaction(function () use ($data) {
+        DB::transaction(function () use ($data, $request) {
             // Create the owner user
             $user = User::create([
                 'name' => $data['owner_name'],
@@ -50,6 +52,9 @@ class OrganizationRegisterController extends Controller
                 'country' => $data['country'] ?? 'India',
                 'status' => 'inactive',
                 'approval_status' => OrganizationApprovalStatus::Pending->value,
+                'subscription_status' => OrganizationSubscriptionStatus::Trialing->value,
+                'registration_source' => RegistrationSource::SelfRegistered->value,
+                'created_by' => $user->id,
                 'owner_email' => $data['email'],
                 'timezone' => 'Asia/Kolkata',
                 'currency' => 'INR',
@@ -62,6 +67,19 @@ class OrganizationRegisterController extends Controller
                 'user_id' => $user->id,
                 'status' => 'active',
                 'joined_at' => now(),
+            ]);
+
+            // Log status lifecycle
+            $organization->statusLogs()->create([
+                'action' => 'registered',
+                'from_status' => null,
+                'to_status' => 'inactive',
+                'from_approval_status' => null,
+                'to_approval_status' => OrganizationApprovalStatus::Pending->value,
+                'reason' => 'Tenant self-registered via public onboarding.',
+                'action_by' => $user->id,
+                'ip_address' => $request->ip(),
+                'user_agent' => $request->userAgent(),
             ]);
 
             $this->auditLog->log(

@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('country')->nullable();
             $table->string('postal_code')->nullable();
             $table->string('logo')->nullable();
-            $table->string('status')->default('active')->index();
+            $table->string('status')->default('pending')->index();
             $table->string('timezone')->default('UTC');
             $table->string('currency')->default('USD');
             $table->string('locale')->default('en');
