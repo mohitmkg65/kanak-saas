@@ -25,7 +25,7 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
                     <div>
                         <span class="text-slate-400 block mb-0.5">Brand / Manufacturer</span>
-                        <span class="font-semibold text-slate-800">{{ $product->brand ?? 'Generic' }}</span>
+                        <span class="font-semibold text-slate-800">{{ $product->brandRelation?->name ?? ($product->brand ?? 'Generic') }}</span>
                     </div>
                     <div>
                         <span class="text-slate-400 block mb-0.5">Category</span>

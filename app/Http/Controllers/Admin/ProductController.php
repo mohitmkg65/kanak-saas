@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StoreProductRequest;
 use App\Http\Requests\Admin\UpdateProductRequest;
+use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\Unit;
@@ -50,8 +51,10 @@ class ProductController extends Controller
     {
         $categories = Category::active()->with('children')->parents()->orderBy('name')->get();
         $units = Unit::active()->orderBy('name')->get();
+        $brands = Brand::active()->orderBy('name')->get();
+        $categoryMappings = $this->getCategoryMappings();
 
-        return view('admin.products.create', compact('categories', 'units'));
+        return view('admin.products.create', compact('categories', 'units', 'brands', 'categoryMappings'));
     }
 
     public function store(StoreProductRequest $request): RedirectResponse
@@ -60,6 +63,13 @@ class ProductController extends Controller
 
         if (empty($data['slug'])) {
             $data['slug'] = Str::slug($data['name']).'-'.Str::lower(Str::random(5));
+        }
+
+        if (! empty($data['brand_id'])) {
+            $brand = Brand::find($data['brand_id']);
+            if ($brand) {
+                $data['brand'] = $brand->name;
+            }
         }
 
         $data['created_by'] = Auth::id();
@@ -79,17 +89,20 @@ class ProductController extends Controller
 
     public function show(Product $product): View
     {
-        $product->load(['category.parent', 'unit', 'creator']);
+        $product->load(['category.parent', 'unit', 'brandRelation', 'creator']);
 
         return view('admin.products.show', compact('product'));
     }
 
     public function edit(Product $product): View
     {
+        $product->load(['category', 'unit', 'brandRelation']);
         $categories = Category::active()->with('children')->parents()->orderBy('name')->get();
         $units = Unit::active()->orderBy('name')->get();
+        $brands = Brand::active()->orderBy('name')->get();
+        $categoryMappings = $this->getCategoryMappings();
 
-        return view('admin.products.edit', compact('product', 'categories', 'units'));
+        return view('admin.products.edit', compact('product', 'categories', 'units', 'brands', 'categoryMappings'));
     }
 
     public function update(UpdateProductRequest $request, Product $product): RedirectResponse
@@ -98,6 +111,15 @@ class ProductController extends Controller
 
         if (empty($data['slug'])) {
             $data['slug'] = Str::slug($data['name']);
+        }
+
+        if (! empty($data['brand_id'])) {
+            $brand = Brand::find($data['brand_id']);
+            if ($brand) {
+                $data['brand'] = $brand->name;
+            }
+        } elseif (array_key_exists('brand_id', $data) && is_null($data['brand_id'])) {
+            $data['brand'] = null;
         }
 
         $oldValues = ['name' => $product->name, 'status' => $product->status];
@@ -113,6 +135,39 @@ class ProductController extends Controller
         );
 
         return redirect()->route('admin.products.index')->with('success', 'Product updated successfully.');
+    }
+
+    protected function getCategoryMappings(): array
+    {
+        $categories = Category::with(['units', 'brands', 'parent.units', 'parent.brands'])->get();
+        $mappings = [];
+
+        foreach ($categories as $cat) {
+            $units = $cat->units;
+            if ($cat->parent && $cat->parent->units->isNotEmpty()) {
+                $units = $units->concat($cat->parent->units)->unique('id');
+            }
+
+            $brands = $cat->brands;
+            if ($cat->parent && $cat->parent->brands->isNotEmpty()) {
+                $brands = $brands->concat($cat->parent->brands)->unique('id');
+            }
+
+            $mappings[$cat->id] = [
+                'units' => $units->values()->map(fn ($u) => [
+                    'id' => $u->id,
+                    'name' => $u->name,
+                    'abbreviation' => $u->abbreviation,
+                ])->toArray(),
+                'brands' => $brands->values()->map(fn ($b) => [
+                    'id' => $b->id,
+                    'name' => $b->name,
+                    'code' => $b->code,
+                ])->toArray(),
+            ];
+        }
+
+        return $mappings;
     }
 
     public function destroy(Product $product): RedirectResponse

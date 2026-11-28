@@ -200,10 +200,49 @@ test('super admin can view global products list and details', function () {
     $response = $this->actingAs($this->admin)->get(route('admin.products.index'));
     $response->assertOk();
     $response->assertSee('UltraTech 53 Grade');
+    $response->assertSee('title="View Product"', false);
+    $response->assertSee('title="Edit Product"', false);
+    $response->assertSee('title="Delete Product"', false);
+
+    $createResponse = $this->actingAs($this->admin)->get(route('admin.products.create'));
+    $createResponse->assertOk();
+    $createResponse->assertSee('Units and brands will load dynamically based on the selected category.');
+
+    $editResponse = $this->actingAs($this->admin)->get(route('admin.products.edit', $product));
+    $editResponse->assertOk();
+    $editResponse->assertSee('Units and brands will load dynamically based on the selected category.');
 
     $showResponse = $this->actingAs($this->admin)->get(route('admin.products.show', $product));
     $showResponse->assertOk();
     $showResponse->assertSee('UltraTech 53 Grade');
+});
+
+test('super admin can store product with brand relation', function () {
+    $category = Category::factory()->create(['name' => 'Cement Department']);
+    $unit = Unit::factory()->create(['name' => 'Bag Standard', 'abbreviation' => 'BAGSTD']);
+    $brand = Brand::factory()->create(['name' => 'ACC Super Cement', 'code' => 'ACCSUPER']);
+
+    $category->units()->sync([$unit->id]);
+    $category->brands()->sync([$brand->id]);
+
+    $response = $this->actingAs($this->admin)->post(route('admin.products.store'), [
+        'name' => 'ACC Super 53 Grade',
+        'category_id' => $category->id,
+        'unit_id' => $unit->id,
+        'brand_id' => $brand->id,
+        'base_price' => 395.00,
+        'sku' => 'ACC-SUP-53',
+        'status' => 'active',
+    ]);
+
+    $response->assertRedirect(route('admin.products.index'));
+
+    $product = Product::where('sku', 'ACC-SUP-53')->first();
+    expect($product)->not->toBeNull();
+    expect($product->brand_id)->toBe($brand->id);
+    expect($product->brand)->toBe('ACC Super Cement');
+    expect($product->category_id)->toBe($category->id);
+    expect($product->unit_id)->toBe($unit->id);
 });
 
 test('super admin can view customers directory', function () {

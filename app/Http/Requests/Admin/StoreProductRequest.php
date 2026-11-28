@@ -22,6 +22,7 @@ class StoreProductRequest extends FormRequest
             'hsn_code' => ['nullable', 'string', 'max:20'],
             'sku' => ['nullable', 'string', 'max:100', 'unique:products,sku'],
             'brand' => ['nullable', 'string', 'max:255'],
+            'brand_id' => ['nullable', 'integer', 'exists:brands,id'],
             'base_price' => ['nullable', 'numeric', 'min:0', 'max:9999999999.99'],
             'status' => ['required', 'string', 'in:active,inactive'],
         ];

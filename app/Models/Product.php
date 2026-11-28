@@ -48,7 +48,12 @@ class Product extends Model
 
     public function brand(): BelongsTo
     {
-        return $this->belongsTo(Brand::class);
+        return $this->belongsTo(Brand::class, 'brand_id');
+    }
+
+    public function brandRelation(): BelongsTo
+    {
+        return $this->belongsTo(Brand::class, 'brand_id');
     }
 
     public function creator(): BelongsTo

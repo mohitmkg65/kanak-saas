@@ -187,9 +187,9 @@
                                 <tr id="unit-row-{{ $unit->public_id }}" class="hover:bg-slate-50/80 transition-colors {{ $editingUnit && $editingUnit->id === $unit->id ? 'bg-teal-50/60' : '' }}">
                                     <td class="p-4">
                                         <div class="font-bold text-slate-900">{{ $unit->name }}</div>
-                                        {{-- @if($unit->description)
+                                        @if($unit->description)
                                             <div class="text-[11px] text-slate-400 mt-0.5 line-clamp-1">{{ $unit->description }}</div>
-                                        @endif --}}
+                                        @endif
                                     </td>
                                     <td class="px-2 py-4">
                                         <span class="px-2.5 py-1 bg-slate-100 text-slate-800 font-mono font-bold text-xs rounded-lg border border-slate-200">
