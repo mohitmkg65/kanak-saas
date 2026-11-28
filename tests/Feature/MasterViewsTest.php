@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Customer;
 use App\Models\Organization;
@@ -120,6 +121,77 @@ test('super admin can update unit categories', function () {
     $response->assertRedirect(route('admin.units.index'));
     expect($unit->fresh()->categories)->toHaveCount(2);
     expect($unit->fresh()->categories->pluck('id')->toArray())->toContain($cat2->id);
+});
+
+test('super admin can view brands list and create page', function () {
+    $brand = Brand::factory()->create(['name' => 'Tata Tiscon Test', 'code' => 'TISCONTEST']);
+
+    $response = $this->actingAs($this->admin)->get(route('admin.brands.index'));
+    $response->assertOk();
+    $response->assertSee('Tata Tiscon Test');
+    $response->assertSee('TISCONTEST');
+    $response->assertSee('Add Brand');
+    $response->assertSee('Save Brand');
+    $response->assertSee('Applicable Categories');
+
+    // Test edit mode on 2-part index page
+    $editPageResponse = $this->actingAs($this->admin)->get(route('admin.brands.index', ['edit' => $brand->public_id]));
+    $editPageResponse->assertOk();
+    $editPageResponse->assertSee('Edit Brand: Tata Tiscon Test');
+    $editPageResponse->assertSee('Update Brand');
+
+    // Direct edit route renders 2-part index page at /admin/brands/{brand}/edit
+    $editRouteResponse = $this->actingAs($this->admin)->get(route('admin.brands.edit', $brand));
+    $editRouteResponse->assertOk();
+    $editRouteResponse->assertSee('Edit Brand: Tata Tiscon Test');
+    $editRouteResponse->assertSee('Update Brand');
+
+    $createResponse = $this->actingAs($this->admin)->get(route('admin.brands.create'));
+    $createResponse->assertOk();
+    $createResponse->assertSee('Add Brand');
+    $createResponse->assertSee('Applicable Material Categories');
+});
+
+test('super admin can create brand with multiple categories', function () {
+    $cat1 = Category::factory()->create(['name' => 'Ceramics Dept']);
+    $cat2 = Category::factory()->create(['name' => 'Bathware Dept']);
+
+    $response = $this->actingAs($this->admin)->post(route('admin.brands.store'), [
+        'name' => 'Somany Ceramics Test',
+        'code' => 'SOMANYTEST',
+        'website' => 'https://somanyceramics.com',
+        'description' => 'Floor and wall tile specialist',
+        'status' => 'active',
+        'category_ids' => [$cat1->id, $cat2->id],
+    ]);
+
+    $response->assertRedirect(route('admin.brands.index'));
+    $brand = Brand::where('name', 'Somany Ceramics Test')->first();
+    expect($brand)->not->toBeNull();
+    expect($brand->categories)->toHaveCount(2);
+    expect($brand->categories->pluck('id')->toArray())->toContain($cat1->id, $cat2->id);
+    expect($cat1->fresh()->brands->pluck('id')->toArray())->toContain($brand->id);
+});
+
+test('super admin can update brand and its categories', function () {
+    $cat1 = Category::factory()->create(['name' => 'Paints Test Dept']);
+    $cat2 = Category::factory()->create(['name' => 'Waterproofing Test Dept']);
+    $brand = Brand::factory()->create(['name' => 'Dr Fixit Test', 'code' => 'DRFIXTEST']);
+    $brand->categories()->sync([$cat1->id]);
+
+    $response = $this->actingAs($this->admin)->put(route('admin.brands.update', $brand), [
+        'name' => 'Dr Fixit Test Updated',
+        'code' => 'DRFIXTEST2',
+        'website' => 'https://drfixit.co.in',
+        'description' => 'Waterproofing solutions',
+        'status' => 'active',
+        'category_ids' => [$cat1->id, $cat2->id],
+    ]);
+
+    $response->assertRedirect(route('admin.brands.index'));
+    expect($brand->fresh()->name)->toBe('Dr Fixit Test Updated');
+    expect($brand->fresh()->categories)->toHaveCount(2);
+    expect($brand->fresh()->categories->pluck('id')->toArray())->toContain($cat2->id);
 });
 
 test('super admin can view global products list and details', function () {

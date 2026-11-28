@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Enums\OrganizationApprovalStatus;
 use App\Http\Controllers\Controller;
+use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Customer;
 use App\Models\Organization;
@@ -23,6 +24,7 @@ class DashboardController extends Controller
                 ->count(),
             'total_system_users' => User::count(),
             'total_categories' => Category::count(),
+            'total_brands' => Brand::count(),
             'total_products' => Product::count(),
             'total_customers' => Customer::count(),
         ];

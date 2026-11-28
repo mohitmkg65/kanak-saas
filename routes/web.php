@@ -43,6 +43,7 @@ Route::middleware(['auth', 'super.admin'])->prefix('admin')->name('admin.')->gro
     // Global Masters
     Route::resource('categories', Admin\CategoryController::class)->except(['show']);
     Route::resource('units', Admin\UnitController::class)->except(['show']);
+    Route::resource('brands', Admin\BrandController::class)->except(['show']);
     Route::resource('products', Admin\ProductController::class);
 
     // Customer Directory (read-only across all orgs)

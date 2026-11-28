@@ -22,6 +22,7 @@ class Product extends Model
         'hsn_code',
         'sku',
         'brand',
+        'brand_id',
         'base_price',
         'image',
         'status',
@@ -43,6 +44,11 @@ class Product extends Model
     public function unit(): BelongsTo
     {
         return $this->belongsTo(Unit::class);
+    }
+
+    public function brand(): BelongsTo
+    {
+        return $this->belongsTo(Brand::class);
     }
 
     public function creator(): BelongsTo

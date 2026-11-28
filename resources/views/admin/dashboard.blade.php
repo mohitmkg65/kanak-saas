@@ -39,7 +39,7 @@
                 <div>
                     <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Global Products</p>
                     <h3 class="text-2xl font-bold text-slate-900 mt-1">{{ $stats['total_products'] }}</h3>
-                    <div class="text-[11px] text-indigo-600 font-medium mt-1">{{ $stats['total_categories'] }} categories defined</div>
+                    <div class="text-[11px] text-indigo-600 font-medium mt-1">{{ $stats['total_categories'] }} categories • {{ $stats['total_brands'] }} brands</div>
                 </div>
                 <div class="w-12 h-12 rounded-xl bg-teal-50 text-teal-700 flex items-center justify-center font-bold text-lg">
                     📦

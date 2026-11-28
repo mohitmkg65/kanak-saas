@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\Unit;
@@ -140,7 +141,115 @@ class GlobalMasterSeeder extends Seeder
             }
         }
 
-        // 5. Seed Sample Products
+        // 5. Seed Leading Material Brands
+        $brands = [
+            [
+                'name' => 'UltraTech Cement',
+                'code' => 'ULTRATECH',
+                'slug' => 'ultratech-cement',
+                'website' => 'https://www.ultratechcement.com',
+                'description' => "India's largest manufacturer of grey cement and ready-mix concrete.",
+                'categories' => ['cement-concrete', 'opc-cement', 'ppc-cement'],
+            ],
+            [
+                'name' => 'ACC Limited',
+                'code' => 'ACC',
+                'slug' => 'acc-limited',
+                'website' => 'https://www.acclimited.com',
+                'description' => 'Leading manufacturer of cement and ready-mix concrete.',
+                'categories' => ['cement-concrete', 'opc-cement'],
+            ],
+            [
+                'name' => 'Ambuja Cements',
+                'code' => 'AMBUJA',
+                'slug' => 'ambuja-cements',
+                'website' => 'https://www.ambujacement.com',
+                'description' => 'Major cement manufacturer known for high strength and sustainability.',
+                'categories' => ['cement-concrete', 'ppc-cement'],
+            ],
+            [
+                'name' => 'TATA Steel',
+                'code' => 'TATA',
+                'slug' => 'tata-steel',
+                'website' => 'https://www.tatatiscon.co.in',
+                'description' => 'India’s leading brand of superior quality TMT re-bars.',
+                'categories' => ['steel-iron', 'tmt-bars'],
+            ],
+            [
+                'name' => 'Jindal Panther',
+                'code' => 'JINDAL',
+                'slug' => 'jindal-panther',
+                'website' => 'https://www.jindalpanther.com',
+                'description' => 'High-strength TMT re-bars and structural steel products.',
+                'categories' => ['steel-iron', 'tmt-bars'],
+            ],
+            [
+                'name' => 'Asian Paints',
+                'code' => 'ASIAN',
+                'slug' => 'asian-paints',
+                'website' => 'https://www.asianpaints.com',
+                'description' => 'India’s leading paint and coatings manufacturing company.',
+                'categories' => ['paints-coatings', 'exterior-emulsion'],
+            ],
+            [
+                'name' => 'Berger',
+                'code' => 'BERGER',
+                'slug' => 'berger-paints',
+                'website' => 'https://www.bergerpaints.com',
+                'description' => 'Innovative decorative paints and industrial coatings.',
+                'categories' => ['paints-coatings', 'exterior-emulsion'],
+            ],
+            [
+                'name' => 'Kajaria',
+                'code' => 'KAJARIA',
+                'slug' => 'kajaria-ceramics',
+                'website' => 'https://www.kajariaceramics.com',
+                'description' => 'India’s largest manufacturer of ceramic and vitrified floor and wall tiles.',
+                'categories' => ['tiles-flooring', 'vitrified-tiles'],
+            ],
+            [
+                'name' => 'Jaquar',
+                'code' => 'JAQUAR',
+                'slug' => 'jaquar-bathware',
+                'website' => 'https://www.jaquar.com',
+                'description' => 'Premium bathroom fittings, sanitaryware, and plumbing fixtures.',
+                'categories' => ['sanitaryware-plumbing'],
+            ],
+            [
+                'name' => 'Supreme Pipes',
+                'code' => 'SUPREME',
+                'slug' => 'supreme-pipes',
+                'website' => 'https://www.supreme.co.in',
+                'description' => 'Leading producer of PVC, CPVC, drainage, and plumbing piping systems.',
+                'categories' => ['sanitaryware-plumbing', 'pvc-cpvc-pipes'],
+            ],
+        ];
+
+        $brandMap = [];
+        foreach ($brands as $b) {
+            $brand = Brand::updateOrCreate(
+                ['name' => $b['name']],
+                [
+                    'code' => $b['code'],
+                    'slug' => $b['slug'],
+                    'website' => $b['website'],
+                    'description' => $b['description'],
+                    'status' => 'active',
+                ]
+            );
+            $brandMap[$b['name']] = $brand->id;
+            // Also map short alias if any
+            if (isset($b['code'])) {
+                $brandMap[$b['code']] = $brand->id;
+            }
+
+            if (! empty($b['categories'])) {
+                $matchedCatIds = Category::whereIn('slug', $b['categories'])->pluck('id');
+                $brand->categories()->syncWithoutDetaching($matchedCatIds);
+            }
+        }
+
+        // 6. Seed Sample Products
         $products = [
             [
                 'name' => 'UltraTech OPC 53 Grade Cement',
@@ -250,6 +359,7 @@ class GlobalMasterSeeder extends Seeder
                         'unit_id' => $unitId,
                         'hsn_code' => $p['hsn_code'],
                         'brand' => $p['brand'],
+                        'brand_id' => $brandMap[$p['brand']] ?? null,
                         'base_price' => $p['base_price'],
                         'status' => 'active',
                     ]
