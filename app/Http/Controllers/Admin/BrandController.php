@@ -20,7 +20,7 @@ class BrandController extends Controller
     public function index(Request $request): View
     {
         $brands = $this->getBrandsQuery($request);
-        $categories = Category::active()->with('children')->parents()->orderBy('sort_order')->orderBy('name')->get();
+        $categories = Category::active()->orderBy('sort_order')->orderBy('name')->get();
 
         $editingBrand = null;
         if ($editId = $request->input('edit')) {
@@ -32,7 +32,7 @@ class BrandController extends Controller
 
     public function create(): View
     {
-        $categories = Category::active()->with('children')->parents()->orderBy('sort_order')->orderBy('name')->get();
+        $categories = Category::active()->orderBy('sort_order')->orderBy('name')->get();
 
         return view('admin.brands.create', compact('categories'));
     }
@@ -64,7 +64,7 @@ class BrandController extends Controller
     {
         $brand->load('categories');
         $brands = $this->getBrandsQuery($request);
-        $categories = Category::active()->with('children')->parents()->orderBy('sort_order')->orderBy('name')->get();
+        $categories = Category::active()->orderBy('sort_order')->orderBy('name')->get();
         $editingBrand = $brand;
 
         return view('admin.brands.index', compact('brands', 'categories', 'editingBrand'));

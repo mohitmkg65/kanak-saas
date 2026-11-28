@@ -68,7 +68,7 @@ class ProductController extends Controller
     public function create(Request $request): View
     {
         $org = $this->context->current();
-        $categories = Category::active()->with('children')->parents()->orderBy('name')->get();
+        $categories = Category::active()->orderBy('name')->get();
         $units = Unit::active()->orderBy('name')->get();
 
         // If adding from catalog, pre-fill from the global product
@@ -160,7 +160,7 @@ class ProductController extends Controller
             abort(403, 'Unauthorized. This product does not belong to your organization.');
         }
 
-        $categories = Category::active()->with('children')->parents()->orderBy('name')->get();
+        $categories = Category::active()->orderBy('name')->get();
         $units = Unit::active()->orderBy('name')->get();
 
         return view('organization.products.edit', compact('product', 'org', 'categories', 'units'));

@@ -30,7 +30,7 @@
                     <div>
                         <span class="text-slate-400 block mb-0.5">Category</span>
                         <span class="font-semibold text-slate-800">
-                            {{ $product->category?->parent ? $product->category->parent->name . ' → ' : '' }}{{ $product->category?->name ?? '—' }}
+                            {{ $product->category?->name ?? '—' }}
                         </span>
                     </div>
                     <div>

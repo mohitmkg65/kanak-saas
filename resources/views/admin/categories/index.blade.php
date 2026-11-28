@@ -1,9 +1,9 @@
-@extends('layouts.admin', ['title' => 'Categories & Subcategories', 'header' => 'Master Data: Categories'])
+@extends('layouts.admin', ['title' => 'Categories', 'header' => 'Master Data: Categories'])
 
 @section('content')
     <div class="mb-2">
-        <h1 class="text-xl font-bold text-slate-900">Categories & Subcategories</h1>
-        <p class="text-xs text-slate-500 mt-0.5">Hierarchical building material taxonomy (Cement, Steel, Tiles, Paints, etc.)</p>
+        <h1 class="text-xl font-bold text-slate-900">Categories</h1>
+        <p class="text-xs text-slate-500 mt-0.5">Manage building material catalog categories</p>
     </div>
 
     <!-- 2-Part Layout: Col-4 (Form) & Col-8 (Table) -->
@@ -39,25 +39,12 @@
                         @endif
                     </div>
 
-                    {{-- <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1">Parent Category (Optional)</label>
-                        <select name="parent_id" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:bg-white focus:outline-none focus:ring-2 focus:ring-teal-500">
-                            <option value="">— None (This will be a Top-Level Category) —</option>
-                            @foreach($parentCategories as $parent)
-                                <option value="{{ $parent->id }}" {{ old('parent_id') == $parent->id ? 'selected' : '' }}>
-                                    {{ $parent->name }}
-                                </option>
-                            @endforeach
-                        </select>
-                        <p class="text-[11px] text-slate-400 mt-1">Leave empty to create a top-level department like Cement, Steel, Paints.</p>
-                    </div> --}}
-
                     <div>
                         <label class="block text-xs font-bold text-slate-700 mb-1">Category Name *</label>
                         <input type="text" id="category-name" name="name"
                             value="{{ old('name', $editingCategory?->name) }}"
                             required
-                            placeholder="e.g. TMT Bars, White Cement, Floor Tiles"
+                            placeholder="e.g. Cement, Steel, Tiles, Paints"
                             class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:bg-white focus:outline-none focus:ring-2 focus:ring-teal-500">
                     </div>
 
@@ -76,20 +63,13 @@
                             class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:bg-white focus:outline-none focus:ring-2 focus:ring-teal-500">{{ old('description', $editingCategory?->description) }}</textarea>
                     </div>
 
-                    <div class="grid grid-cols-1 gap-4">
-                        {{-- <div>
-                            <label class="block text-xs font-bold text-slate-700 mb-1">Display Sort Order</label>
-                            <input type="number" name="sort_order" value="{{ old('sort_order', 0) }}" min="0"
-                                class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:bg-white focus:outline-none focus:ring-2 focus:ring-teal-500">
-                        </div> --}}
-                        <div>
-                            <label class="block text-xs font-bold text-slate-700 mb-1">Status</label>
-                            <select id="category-status" name="status"
-                                class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:bg-white focus:outline-none focus:ring-2 focus:ring-teal-500">
-                                <option value="active" {{ old('status', $editingCategory?->status ?? 'active') === 'active' ? 'selected' : '' }}>Active</option>
-                                <option value="inactive" {{ old('status', $editingCategory?->status) === 'inactive' ? 'selected' : '' }}>Inactive</option>
-                            </select>
-                        </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Status</label>
+                        <select id="category-status" name="status"
+                            class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:bg-white focus:outline-none focus:ring-2 focus:ring-teal-500">
+                            <option value="active" {{ old('status', $editingCategory?->status ?? 'active') === 'active' ? 'selected' : '' }}>Active</option>
+                            <option value="inactive" {{ old('status', $editingCategory?->status) === 'inactive' ? 'selected' : '' }}>Inactive</option>
+                        </select>
                     </div>
 
                     <div class="pt-4 border-t border-slate-100 flex items-center justify-end gap-3">
@@ -112,13 +92,7 @@
                 <!-- Search & Filter Bar -->
                 <form method="GET" action="{{ route('admin.categories.index') }}" class="p-4 border-b border-slate-100 flex flex-col sm:flex-row items-center gap-3">
                     <input type="text" name="search" value="{{ request('search') }}" placeholder="Search category by name..."
-                        class="w-full sm:w-64 px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:bg-white focus:outline-none focus:ring-2 focus:ring-teal-500">
-                    
-                    {{-- <select name="type" class="w-full sm:w-44 px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:bg-white focus:outline-none focus:ring-2 focus:ring-teal-500">
-                        <option value="">All Categories</option>
-                        <option value="parent" {{ request('type') === 'parent' ? 'selected' : '' }}>Parent Categories Only</option>
-                        <option value="subcategory" {{ request('type') === 'subcategory' ? 'selected' : '' }}>Subcategories Only</option>
-                    </select> --}}
+                        class="w-full sm:flex-1 px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:bg-white focus:outline-none focus:ring-2 focus:ring-teal-500">
 
                     <div class="relative w-full sm:w-36">
                         <select name="status" class="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:bg-white focus:outline-none focus:ring-2 focus:ring-teal-500 appearance-none pr-8">
@@ -136,9 +110,13 @@
                     <button type="submit" class="w-full sm:w-auto px-4 py-2 bg-indigo-900 hover:bg-indigo-950 text-white text-xs font-bold rounded-xl transition">
                         Filter
                     </button>
-                    @if(request()->hasAny(['search', 'type', 'status']))
+                    @if(request()->hasAny(['search', 'status']))
                         <a href="{{ route('admin.categories.index') }}" class="text-xs text-slate-500 hover:text-slate-800">Clear</a>
                     @endif
+
+                    <div class="ml-auto text-xs font-semibold text-slate-400 whitespace-nowrap">
+                        Total: <span class="text-slate-700 font-bold">{{ $categories->total() }}</span> Categories
+                    </div>
                 </form>
 
                 <div class="overflow-x-auto">
@@ -146,10 +124,8 @@
                         <thead class="bg-slate-50 text-xs uppercase font-semibold text-slate-500 border-b border-slate-100">
                             <tr>
                                 <th class="px-6 py-3.5">Category Name</th>
-                                {{-- <th class="px-6 py-3.5">Parent Category</th> --}}
-                                {{-- <th class="px-6 py-3.5">Subcategories</th> --}}
+                                <th class="px-6 py-3.5">Slug</th>
                                 <th class="px-6 py-3.5">Products Count</th>
-                                {{-- <th class="px-6 py-3.5">Sort</th> --}}
                                 <th class="px-6 py-3.5">Status</th>
                                 <th class="px-6 py-3.5 text-right">Actions</th>
                             </tr>
@@ -159,34 +135,17 @@
                                 <tr id="category-row-{{ $category->public_id }}"
                                     class="hover:bg-slate-50/80 transition-colors {{ $editingCategory && $editingCategory->id === $category->id ? 'bg-teal-50/60' : '' }}">
                                     <td class="px-6 py-4">
-                                        <div class="font-bold text-slate-900 flex items-center gap-2">
-                                            @if($category->parent_id)
-                                                <span class="text-slate-300">↳</span>
-                                            @endif
-                                            <span>{{ $category->name }}</span>
-                                        </div>
-                                        <div class="text-xs text-slate-400 font-mono">{{ $category->slug }}</div>
-                                    </td>
-                                    {{-- <td class="px-6 py-4 text-xs">
-                                        @if($category->parent)
-                                            <span class="px-2.5 py-1 bg-indigo-50 text-indigo-700 font-semibold rounded-lg border border-indigo-100">
-                                                {{ $category->parent->name }}
-                                            </span>
-                                        @else
-                                            <span class="text-xs font-bold text-teal-700 bg-teal-50 px-2.5 py-1 rounded-lg border border-teal-100">
-                                                Top-Level Parent
-                                            </span>
+                                        <div class="font-bold text-slate-900">{{ $category->name }}</div>
+                                        @if($category->description)
+                                            <div class="text-[11px] text-slate-400 mt-0.5 line-clamp-1">{{ $category->description }}</div>
                                         @endif
                                     </td>
-                                    <td class="px-6 py-4 text-xs font-semibold text-slate-700">
-                                        {{ $category->children_count }} subcategories
-                                    </td> --}}
+                                    <td class="px-6 py-4 text-xs font-mono text-slate-500">
+                                        {{ $category->slug }}
+                                    </td>
                                     <td class="px-6 py-4 text-xs font-semibold text-slate-700">
                                         {{ $category->products_count }} products
                                     </td>
-                                    {{-- <td class="px-6 py-4 text-xs font-mono text-slate-500">
-                                        {{ $category->sort_order }}
-                                    </td> --}}
                                     <td class="px-6 py-4">
                                         <span class="px-2.5 py-1 text-xs font-bold rounded-full {{ $category->status === 'active' ? 'bg-teal-100 text-teal-800' : 'bg-slate-100 text-slate-700' }}">
                                             {{ ucfirst($category->status) }}
@@ -227,7 +186,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="4" class="px-6 py-12 text-center text-slate-400 text-sm">
+                                    <td colspan="5" class="px-6 py-12 text-center text-slate-400 text-sm">
                                         No categories found. Use the form on the left to add one.
                                     </td>
                                 </tr>
@@ -278,7 +237,7 @@
                 tr.classList.remove('bg-teal-50/60');
             });
 
-            // Update URL back to index URL as requested
+            // Update URL back to index URL
             if (pushState && window.location.href !== indexUrl) {
                 window.history.pushState({}, '', indexUrl);
             }
@@ -307,7 +266,7 @@
                 activeRow.classList.add('bg-teal-50/60');
             }
 
-            // Update browser URL to edit URL as requested
+            // Update browser URL to edit URL
             if (pushState && data.editUrl && window.location.href !== data.editUrl) {
                 window.history.pushState({ categoryId: data.id }, '', data.editUrl);
             }
@@ -322,7 +281,6 @@
         // Attach click handlers to all Edit buttons in the table
         document.querySelectorAll('.edit-category-btn').forEach(function (btn) {
             btn.addEventListener('click', function (e) {
-                // If standard left-click without modifier keys, handle on same page with URL change
                 if (!e.ctrlKey && !e.metaKey && !e.shiftKey) {
                     e.preventDefault();
                     setEditMode({
@@ -357,7 +315,6 @@
         // Handle browser Back / Forward buttons
         window.addEventListener('popstate', function () {
             if (window.location.href.includes('/edit')) {
-                // If navigated forward/back to an edit URL, find the matching button or reload
                 const currentEditBtn = document.querySelector(`.edit-category-btn[data-edit-url="${window.location.href}"]`);
                 if (currentEditBtn) {
                     setEditMode({

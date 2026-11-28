@@ -7,29 +7,16 @@
                 ← Back to Categories
             </a>
             <h1 class="text-xl font-bold text-slate-900">Add Category</h1>
-            <p class="text-xs text-slate-500 mt-0.5">Define a global material category or nest it under a parent</p>
+            <p class="text-xs text-slate-500 mt-0.5">Define a global material category</p>
         </div>
 
         <div class="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-xs">
             <form action="{{ route('admin.categories.store') }}" method="POST" class="space-y-4">
                 @csrf
 
-                {{-- <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1">Parent Category (Optional)</label>
-                    <select name="parent_id" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:bg-white focus:outline-none focus:ring-2 focus:ring-teal-500">
-                        <option value="">— None (This will be a Top-Level Category) —</option>
-                        @foreach($parentCategories as $parent)
-                            <option value="{{ $parent->id }}" {{ old('parent_id') == $parent->id ? 'selected' : '' }}>
-                                {{ $parent->name }}
-                            </option>
-                        @endforeach
-                    </select>
-                    <p class="text-[11px] text-slate-400 mt-1">Leave empty to create a top-level department like Cement, Steel, Paints.</p>
-                </div> --}}
-
                 <div>
                     <label class="block text-xs font-bold text-slate-700 mb-1">Category Name *</label>
-                    <input type="text" name="name" value="{{ old('name') }}" required placeholder="e.g. TMT Bars, White Cement, Floor Tiles"
+                    <input type="text" name="name" value="{{ old('name') }}" required placeholder="e.g. Cement, Steel, Tiles, Paints"
                         class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:bg-white focus:outline-none focus:ring-2 focus:ring-teal-500">
                 </div>
 
@@ -45,19 +32,12 @@
                         class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:bg-white focus:outline-none focus:ring-2 focus:ring-teal-500">{{ old('description') }}</textarea>
                 </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    {{-- <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1">Display Sort Order</label>
-                        <input type="number" name="sort_order" value="{{ old('sort_order', 0) }}" min="0"
-                            class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:bg-white focus:outline-none focus:ring-2 focus:ring-teal-500">
-                    </div> --}}
-                    <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1">Status</label>
-                        <select name="status" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:bg-white focus:outline-none focus:ring-2 focus:ring-teal-500">
-                            <option value="active" {{ old('status', 'active') === 'active' ? 'selected' : '' }}>Active</option>
-                            <option value="inactive" {{ old('status') === 'inactive' ? 'selected' : '' }}>Inactive</option>
-                        </select>
-                    </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Status</label>
+                    <select name="status" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:bg-white focus:outline-none focus:ring-2 focus:ring-teal-500">
+                        <option value="active" {{ old('status', 'active') === 'active' ? 'selected' : '' }}>Active</option>
+                        <option value="inactive" {{ old('status') === 'inactive' ? 'selected' : '' }}>Inactive</option>
+                    </select>
                 </div>
 
                 <div class="pt-4 border-t border-slate-100 flex items-center justify-end gap-3">

@@ -21,17 +21,9 @@ class CategoryFactory extends Factory
             'name' => $name,
             'slug' => Str::slug($name).'-'.$this->faker->unique()->numberBetween(1000, 9999),
             'description' => $this->faker->sentence(),
-            'parent_id' => null,
             'sort_order' => $this->faker->numberBetween(0, 100),
             'status' => 'active',
         ];
-    }
-
-    public function subcategoryOf(Category $parent): static
-    {
-        return $this->state(fn (array $attributes) => [
-            'parent_id' => $parent->id,
-        ]);
     }
 
     public function inactive(): static

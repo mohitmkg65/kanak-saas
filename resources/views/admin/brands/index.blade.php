@@ -109,13 +109,13 @@
                                 $selectedCategories = old('category_ids', old('categories', $editingBrand ? $editingBrand->categories->pluck('id')->toArray() : []));
                             @endphp
 
-                            @foreach($categories as $parent)
+                            @foreach($categories as $category)
                                 <div class="category-group bg-white p-2.5 rounded-lg border border-slate-200/80 shadow-2xs">
                                     <label class="flex items-center gap-2 font-bold text-xs text-slate-800 cursor-pointer">
-                                        <input type="checkbox" name="category_ids[]" value="{{ $parent->id }}"
-                                            {{ in_array($parent->id, $selectedCategories) ? 'checked' : '' }}
+                                        <input type="checkbox" name="category_ids[]" value="{{ $category->id }}"
+                                            {{ in_array($category->id, $selectedCategories) ? 'checked' : '' }}
                                             class="category-checkbox w-3.5 h-3.5 text-teal-600 rounded border-slate-300 focus:ring-teal-500">
-                                        <span>{{ $parent->name }}</span>
+                                        <span>{{ $category->name }}</span>
                                     </label>
                                 </div>
                             @endforeach

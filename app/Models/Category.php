@@ -18,22 +18,11 @@ class Category extends Model
         'name',
         'slug',
         'description',
-        'parent_id',
         'image',
         'sort_order',
         'status',
         'created_by',
     ];
-
-    public function parent(): BelongsTo
-    {
-        return $this->belongsTo(Category::class, 'parent_id');
-    }
-
-    public function children(): HasMany
-    {
-        return $this->hasMany(Category::class, 'parent_id');
-    }
 
     public function products(): HasMany
     {
@@ -53,16 +42,6 @@ class Category extends Model
     public function creator(): BelongsTo
     {
         return $this->belongsTo(User::class, 'created_by');
-    }
-
-    public function isParent(): bool
-    {
-        return is_null($this->parent_id);
-    }
-
-    public function scopeParents($query)
-    {
-        return $query->whereNull('parent_id');
     }
 
     public function scopeActive($query)

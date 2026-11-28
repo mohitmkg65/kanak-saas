@@ -102,27 +102,14 @@
                                 $selectedCategories = old('category_ids', old('categories', $editingUnit ? $editingUnit->categories->pluck('id')->toArray() : []));
                             @endphp
 
-                            @foreach($categories as $parent)
+                            @foreach($categories as $category)
                                 <div class="category-group bg-white p-2.5 rounded-lg border border-slate-200/80 shadow-2xs">
                                     <label class="flex items-center gap-2 font-bold text-xs text-slate-800 cursor-pointer">
-                                        <input type="checkbox" name="category_ids[]" value="{{ $parent->id }}"
-                                            {{ in_array($parent->id, $selectedCategories) ? 'checked' : '' }}
+                                        <input type="checkbox" name="category_ids[]" value="{{ $category->id }}"
+                                            {{ in_array($category->id, $selectedCategories) ? 'checked' : '' }}
                                             class="category-checkbox w-3.5 h-3.5 text-teal-600 rounded border-slate-300 focus:ring-teal-500">
-                                        <span>{{ $parent->name }}</span>
+                                        <span>{{ $category->name }}</span>
                                     </label>
-
-                                    {{-- @if($parent->children->isNotEmpty())
-                                        <div class="mt-2 pl-5 grid grid-cols-1 gap-1.5 border-t border-slate-100 pt-1.5">
-                                            @foreach($parent->children as $child)
-                                                <label class="flex items-center gap-2 text-[11px] text-slate-600 cursor-pointer hover:text-slate-900">
-                                                    <input type="checkbox" name="category_ids[]" value="{{ $child->id }}"
-                                                        {{ in_array($child->id, $selectedCategories) ? 'checked' : '' }}
-                                                        class="category-checkbox w-3.5 h-3.5 text-teal-600 rounded border-slate-300 focus:ring-teal-500">
-                                                    <span>{{ $child->name }}</span>
-                                                </label>
-                                            @endforeach
-                                        </div>
-                                    @endif --}}
                                 </div>
                             @endforeach
                         </div>

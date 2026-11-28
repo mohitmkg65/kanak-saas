@@ -61,17 +61,10 @@
                         <div>
                             <label class="block text-xs font-bold text-slate-700 mb-1">Category *</label>
                             <select name="category_id" required class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:bg-white focus:outline-none focus:ring-2 focus:ring-teal-500">
-                                @foreach($categories as $parent)
-                                    <optgroup label="{{ $parent->name }}">
-                                        <option value="{{ $parent->id }}" {{ old('category_id', $product->category_id) == $parent->id ? 'selected' : '' }}>
-                                            {{ $parent->name }} (General)
-                                        </option>
-                                        @foreach($parent->children as $child)
-                                            <option value="{{ $child->id }}" {{ old('category_id', $product->category_id) == $child->id ? 'selected' : '' }}>
-                                                ↳ {{ $child->name }}
-                                            </option>
-                                        @endforeach
-                                    </optgroup>
+                                @foreach($categories as $category)
+                                    <option value="{{ $category->id }}" {{ old('category_id', $product->category_id) == $category->id ? 'selected' : '' }}>
+                                        {{ $category->name }}
+                                    </option>
                                 @endforeach
                             </select>
                         </div>

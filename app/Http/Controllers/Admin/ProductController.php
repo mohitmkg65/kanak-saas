@@ -49,7 +49,7 @@ class ProductController extends Controller
 
     public function create(): View
     {
-        $categories = Category::active()->with('children')->parents()->orderBy('name')->get();
+        $categories = Category::active()->orderBy('name')->get();
         $units = Unit::active()->orderBy('name')->get();
         $brands = Brand::active()->orderBy('name')->get();
         $categoryMappings = $this->getCategoryMappings();
@@ -89,7 +89,7 @@ class ProductController extends Controller
 
     public function show(Product $product): View
     {
-        $product->load(['category.parent', 'unit', 'brandRelation', 'creator']);
+        $product->load(['category', 'unit', 'brandRelation', 'creator']);
 
         return view('admin.products.show', compact('product'));
     }
@@ -97,7 +97,7 @@ class ProductController extends Controller
     public function edit(Product $product): View
     {
         $product->load(['category', 'unit', 'brandRelation']);
-        $categories = Category::active()->with('children')->parents()->orderBy('name')->get();
+        $categories = Category::active()->orderBy('name')->get();
         $units = Unit::active()->orderBy('name')->get();
         $brands = Brand::active()->orderBy('name')->get();
         $categoryMappings = $this->getCategoryMappings();
@@ -139,27 +139,17 @@ class ProductController extends Controller
 
     protected function getCategoryMappings(): array
     {
-        $categories = Category::with(['units', 'brands', 'parent.units', 'parent.brands'])->get();
+        $categories = Category::with(['units', 'brands'])->get();
         $mappings = [];
 
         foreach ($categories as $cat) {
-            $units = $cat->units;
-            if ($cat->parent && $cat->parent->units->isNotEmpty()) {
-                $units = $units->concat($cat->parent->units)->unique('id');
-            }
-
-            $brands = $cat->brands;
-            if ($cat->parent && $cat->parent->brands->isNotEmpty()) {
-                $brands = $brands->concat($cat->parent->brands)->unique('id');
-            }
-
             $mappings[$cat->id] = [
-                'units' => $units->values()->map(fn ($u) => [
+                'units' => $cat->units->values()->map(fn ($u) => [
                     'id' => $u->id,
                     'name' => $u->name,
                     'abbreviation' => $u->abbreviation,
                 ])->toArray(),
-                'brands' => $brands->values()->map(fn ($b) => [
+                'brands' => $cat->brands->values()->map(fn ($b) => [
                     'id' => $b->id,
                     'name' => $b->name,
                     'code' => $b->code,

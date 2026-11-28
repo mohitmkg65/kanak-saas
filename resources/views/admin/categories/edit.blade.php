@@ -7,25 +7,13 @@
                 ← Back to Categories
             </a>
             <h1 class="text-xl font-bold text-slate-900">Edit Category: {{ $category->name }}</h1>
-            <p class="text-xs text-slate-500 mt-0.5">Update category hierarchy and master taxonomy details</p>
+            <p class="text-xs text-slate-500 mt-0.5">Update category details and specifications</p>
         </div>
 
         <div class="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-xs">
             <form action="{{ route('admin.categories.update', $category) }}" method="POST" class="space-y-4">
                 @csrf
                 @method('PUT')
-
-                {{-- <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1">Parent Category</label>
-                    <select name="parent_id" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:bg-white focus:outline-none focus:ring-2 focus:ring-teal-500">
-                        <option value="">— None (Top-Level Category) —</option>
-                        @foreach($parentCategories as $parent)
-                            <option value="{{ $parent->id }}" {{ old('parent_id', $category->parent_id) == $parent->id ? 'selected' : '' }}>
-                                {{ $parent->name }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div> --}}
 
                 <div>
                     <label class="block text-xs font-bold text-slate-700 mb-1">Category Name *</label>
@@ -34,8 +22,8 @@
                 </div>
 
                 <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1">Slug *</label>
-                    <input type="text" name="slug" value="{{ old('slug', $category->slug) }}" required
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Slug</label>
+                    <input type="text" name="slug" value="{{ old('slug', $category->slug) }}"
                         class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:bg-white focus:outline-none focus:ring-2 focus:ring-teal-500">
                 </div>
 
@@ -45,19 +33,12 @@
                         class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:bg-white focus:outline-none focus:ring-2 focus:ring-teal-500">{{ old('description', $category->description) }}</textarea>
                 </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    {{-- <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1">Display Sort Order</label>
-                        <input type="number" name="sort_order" value="{{ old('sort_order', $category->sort_order) }}" min="0"
-                            class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:bg-white focus:outline-none focus:ring-2 focus:ring-teal-500">
-                    </div> --}}
-                    <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1">Status</label>
-                        <select name="status" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:bg-white focus:outline-none focus:ring-2 focus:ring-teal-500">
-                            <option value="active" {{ old('status', $category->status) === 'active' ? 'selected' : '' }}>Active</option>
-                            <option value="inactive" {{ old('status', $category->status) === 'inactive' ? 'selected' : '' }}>Inactive</option>
-                        </select>
-                    </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Status</label>
+                    <select name="status" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:bg-white focus:outline-none focus:ring-2 focus:ring-teal-500">
+                        <option value="active" {{ old('status', $category->status) === 'active' ? 'selected' : '' }}>Active</option>
+                        <option value="inactive" {{ old('status', $category->status) === 'inactive' ? 'selected' : '' }}>Inactive</option>
+                    </select>
                 </div>
 
                 <div class="pt-4 border-t border-slate-100 flex items-center justify-end gap-3">

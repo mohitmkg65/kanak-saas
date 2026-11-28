@@ -20,7 +20,7 @@ class UnitController extends Controller
     public function index(Request $request): View
     {
         $units = $this->getUnitsQuery($request);
-        $categories = Category::active()->with('children')->parents()->orderBy('sort_order')->orderBy('name')->get();
+        $categories = Category::active()->orderBy('sort_order')->orderBy('name')->get();
 
         $editingUnit = null;
         if ($editId = $request->input('edit')) {
@@ -32,7 +32,7 @@ class UnitController extends Controller
 
     public function create(): View
     {
-        $categories = Category::active()->with('children')->parents()->orderBy('sort_order')->orderBy('name')->get();
+        $categories = Category::active()->orderBy('sort_order')->orderBy('name')->get();
 
         return view('admin.units.create', compact('categories'));
     }
@@ -64,7 +64,7 @@ class UnitController extends Controller
     {
         $unit->load('categories');
         $units = $this->getUnitsQuery($request);
-        $categories = Category::active()->with('children')->parents()->orderBy('sort_order')->orderBy('name')->get();
+        $categories = Category::active()->orderBy('sort_order')->orderBy('name')->get();
         $editingUnit = $unit;
 
         return view('admin.units.index', compact('units', 'categories', 'editingUnit'));

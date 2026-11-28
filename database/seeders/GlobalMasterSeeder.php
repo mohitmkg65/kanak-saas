@@ -14,20 +14,20 @@ class GlobalMasterSeeder extends Seeder
     {
         // 1. Seed Units of Measure
         $units = [
-            ['name' => 'Bag', 'abbreviation' => 'Bag', 'description' => 'Standard 50kg cement bag'],
-            ['name' => 'Metric Ton', 'abbreviation' => 'MT', 'description' => 'Metric ton (1000 kg)'],
-            ['name' => 'Kilogram', 'abbreviation' => 'KG', 'description' => 'Kilogram'],
-            ['name' => 'Gram', 'abbreviation' => 'GM', 'description' => 'Gram'],
-            ['name' => 'Number/Piece', 'abbreviation' => 'Nos', 'description' => 'Count/piece/number'],
-            ['name' => 'Box', 'abbreviation' => 'Box', 'description' => 'Box or carton'],
-            ['name' => 'Litre', 'abbreviation' => 'Ltr', 'description' => 'Litre (liquid measure)'],
-            ['name' => 'Millilitre', 'abbreviation' => 'ML', 'description' => 'Millilitre'],
-            ['name' => 'Square Feet', 'abbreviation' => 'Sqft', 'description' => 'Square feet (area)'],
-            ['name' => 'Square Meter', 'abbreviation' => 'Sqm', 'description' => 'Square meter (area)'],
-            ['name' => 'Running Feet', 'abbreviation' => 'Rft', 'description' => 'Running feet (linear)'],
-            ['name' => 'Meter', 'abbreviation' => 'Mtr', 'description' => 'Meter (linear)'],
-            ['name' => 'Bundle', 'abbreviation' => 'Bndl', 'description' => 'Bundle or pack'],
-            ['name' => 'Sheet', 'abbreviation' => 'Sht', 'description' => 'Sheet'],
+            ['name' => 'Bag', 'abbreviation' => 'Bag', 'description' => 'Standard packaging bag (e.g., 50kg cement bag)'],
+            ['name' => 'Metric Ton', 'abbreviation' => 'MT', 'description' => '1000 Kilograms (e.g., steel TMT bars)'],
+            ['name' => 'Kilogram', 'abbreviation' => 'KG', 'description' => 'Weight measurement in kilograms'],
+            ['name' => 'Gram', 'abbreviation' => 'GM', 'description' => 'Weight measurement in grams'],
+            ['name' => 'Number/Piece', 'abbreviation' => 'Nos', 'description' => 'Individual items, fittings, or units'],
+            ['name' => 'Box', 'abbreviation' => 'Box', 'description' => 'Box packaging (e.g., tiles, screws, fasteners)'],
+            ['name' => 'Litre', 'abbreviation' => 'Ltr', 'description' => 'Volume measurement in litres (e.g., paints, primers)'],
+            ['name' => 'Millilitre', 'abbreviation' => 'ML', 'description' => 'Volume measurement in millilitres'],
+            ['name' => 'Square Feet', 'abbreviation' => 'Sqft', 'description' => 'Surface area (e.g., tiles, granite, glass)'],
+            ['name' => 'Square Meter', 'abbreviation' => 'Sqm', 'description' => 'Metric surface area'],
+            ['name' => 'Running Feet', 'abbreviation' => 'Rft', 'description' => 'Linear length in feet (e.g., pipes, sections)'],
+            ['name' => 'Meter', 'abbreviation' => 'Mtr', 'description' => 'Linear length in meters (e.g., wires, conduits)'],
+            ['name' => 'Bundle', 'abbreviation' => 'Bndl', 'description' => 'Bundle of materials (e.g., TMT bars, timber)'],
+            ['name' => 'Sheet', 'abbreviation' => 'Sht', 'description' => 'Flat sheet (e.g., roofing sheets, plyboard)'],
             ['name' => 'Gallon', 'abbreviation' => 'Gal', 'description' => 'Gallon (liquid)'],
             ['name' => 'Cubic Feet', 'abbreviation' => 'Cft', 'description' => 'Cubic feet (volume)'],
             ['name' => 'Cubic Meter', 'abbreviation' => 'Cu.m', 'description' => 'Cubic meter (volume)'],
@@ -46,8 +46,8 @@ class GlobalMasterSeeder extends Seeder
             $unitMap[$u['abbreviation']] = $unit->id;
         }
 
-        // 2. Seed Parent Categories
-        $parentCategories = [
+        // 2. Seed Categories
+        $categories = [
             ['name' => 'Cement & Concrete', 'slug' => 'cement-concrete', 'sort_order' => 1, 'description' => 'All types of cement, ready-mix concrete, and concrete accessories'],
             ['name' => 'Steel & Iron', 'slug' => 'steel-iron', 'sort_order' => 2, 'description' => 'TMT bars, steel pipes, iron sheets, and structural steel'],
             ['name' => 'Bricks & Blocks', 'slug' => 'bricks-blocks', 'sort_order' => 3, 'description' => 'Red bricks, fly-ash bricks, AAC blocks, and hollow blocks'],
@@ -63,73 +63,35 @@ class GlobalMasterSeeder extends Seeder
         ];
 
         $categoryMap = [];
-        foreach ($parentCategories as $cat) {
+        foreach ($categories as $cat) {
             $category = Category::updateOrCreate(
                 ['slug' => $cat['slug']],
                 [
                     'name' => $cat['name'],
                     'description' => $cat['description'],
                     'sort_order' => $cat['sort_order'],
-                    'parent_id' => null,
                     'status' => 'active',
                 ]
             );
             $categoryMap[$cat['slug']] = $category->id;
         }
 
-        // 3. Seed Subcategories
-        $subcategories = [
-            // Cement subcategories
-            ['name' => 'OPC Cement', 'slug' => 'opc-cement', 'parent' => 'cement-concrete', 'sort_order' => 1],
-            ['name' => 'PPC Cement', 'slug' => 'ppc-cement', 'parent' => 'cement-concrete', 'sort_order' => 2],
-            ['name' => 'White Cement', 'slug' => 'white-cement', 'parent' => 'cement-concrete', 'sort_order' => 3],
-            ['name' => 'Ready Mix Concrete', 'slug' => 'ready-mix-concrete', 'parent' => 'cement-concrete', 'sort_order' => 4],
-
-            // Steel subcategories
-            ['name' => 'TMT Bars', 'slug' => 'tmt-bars', 'parent' => 'steel-iron', 'sort_order' => 1],
-            ['name' => 'Steel Pipes & Tubes', 'slug' => 'steel-pipes-tubes', 'parent' => 'steel-iron', 'sort_order' => 2],
-            ['name' => 'MS Plates & Sheets', 'slug' => 'ms-plates-sheets', 'parent' => 'steel-iron', 'sort_order' => 3],
-
-            // Tiles subcategories
-            ['name' => 'Floor Tiles', 'slug' => 'floor-tiles', 'parent' => 'tiles-flooring', 'sort_order' => 1],
-            ['name' => 'Wall Tiles', 'slug' => 'wall-tiles', 'parent' => 'tiles-flooring', 'sort_order' => 2],
-            ['name' => 'Vitrified Tiles', 'slug' => 'vitrified-tiles', 'parent' => 'tiles-flooring', 'sort_order' => 3],
-            ['name' => 'Marble & Granite', 'slug' => 'marble-granite', 'parent' => 'tiles-flooring', 'sort_order' => 4],
-
-            // Paints subcategories
-            ['name' => 'Interior Emulsion', 'slug' => 'interior-emulsion', 'parent' => 'paints-coatings', 'sort_order' => 1],
-            ['name' => 'Exterior Emulsion', 'slug' => 'exterior-emulsion', 'parent' => 'paints-coatings', 'sort_order' => 2],
-            ['name' => 'Primers & Putty', 'slug' => 'primers-putty', 'parent' => 'paints-coatings', 'sort_order' => 3],
-        ];
-
-        foreach ($subcategories as $sub) {
-            Category::updateOrCreate(
-                ['slug' => $sub['slug']],
-                [
-                    'name' => $sub['name'],
-                    'parent_id' => $categoryMap[$sub['parent']],
-                    'sort_order' => $sub['sort_order'],
-                    'status' => 'active',
-                ]
-            );
-        }
-
-        // 4. Map Units to Multiple Categories
+        // 3. Map Units to Categories
         $unitCategoryMapping = [
-            'Bag' => ['cement-concrete', 'adhesives-chemicals', 'opc-cement', 'ppc-cement', 'white-cement'],
-            'MT' => ['steel-iron', 'cement-concrete', 'tmt-bars'],
+            'Bag' => ['cement-concrete', 'adhesives-chemicals'],
+            'MT' => ['steel-iron', 'cement-concrete'],
             'KG' => ['hardware-fasteners', 'adhesives-chemicals', 'paints-coatings'],
             'GM' => ['hardware-fasteners', 'adhesives-chemicals'],
             'Nos' => ['hardware-fasteners', 'sanitaryware-plumbing', 'electrical-materials', 'bricks-blocks', 'wood-plyboard'],
             'Box' => ['tiles-flooring', 'hardware-fasteners', 'sanitaryware-plumbing', 'electrical-materials'],
-            'Ltr' => ['paints-coatings', 'adhesives-chemicals', 'roofing-waterproofing', 'interior-emulsion', 'exterior-emulsion'],
+            'Ltr' => ['paints-coatings', 'adhesives-chemicals', 'roofing-waterproofing'],
             'ML' => ['paints-coatings', 'adhesives-chemicals'],
-            'Sqft' => ['tiles-flooring', 'wood-plyboard', 'glass-aluminum', 'roofing-waterproofing', 'floor-tiles', 'wall-tiles', 'vitrified-tiles'],
+            'Sqft' => ['tiles-flooring', 'wood-plyboard', 'glass-aluminum', 'roofing-waterproofing'],
             'Sqm' => ['tiles-flooring', 'glass-aluminum', 'roofing-waterproofing'],
             'Rft' => ['steel-iron', 'sanitaryware-plumbing', 'wood-plyboard'],
             'Mtr' => ['electrical-materials', 'sanitaryware-plumbing', 'steel-iron'],
-            'Bndl' => ['steel-iron', 'wood-plyboard', 'tmt-bars'],
-            'Sht' => ['roofing-waterproofing', 'wood-plyboard', 'glass-aluminum', 'ms-plates-sheets'],
+            'Bndl' => ['steel-iron', 'wood-plyboard'],
+            'Sht' => ['roofing-waterproofing', 'wood-plyboard', 'glass-aluminum'],
             'Cft' => ['wood-plyboard', 'bricks-blocks'],
         ];
 
@@ -141,7 +103,7 @@ class GlobalMasterSeeder extends Seeder
             }
         }
 
-        // 5. Seed Leading Material Brands
+        // 4. Seed Leading Material Brands
         $brands = [
             [
                 'name' => 'UltraTech Cement',
@@ -149,7 +111,7 @@ class GlobalMasterSeeder extends Seeder
                 'slug' => 'ultratech-cement',
                 'website' => 'https://www.ultratechcement.com',
                 'description' => "India's largest manufacturer of grey cement and ready-mix concrete.",
-                'categories' => ['cement-concrete', 'opc-cement', 'ppc-cement'],
+                'categories' => ['cement-concrete'],
             ],
             [
                 'name' => 'ACC Limited',
@@ -157,7 +119,7 @@ class GlobalMasterSeeder extends Seeder
                 'slug' => 'acc-limited',
                 'website' => 'https://www.acclimited.com',
                 'description' => 'Leading manufacturer of cement and ready-mix concrete.',
-                'categories' => ['cement-concrete', 'opc-cement'],
+                'categories' => ['cement-concrete'],
             ],
             [
                 'name' => 'Ambuja Cements',
@@ -165,7 +127,7 @@ class GlobalMasterSeeder extends Seeder
                 'slug' => 'ambuja-cements',
                 'website' => 'https://www.ambujacement.com',
                 'description' => 'Major cement manufacturer known for high strength and sustainability.',
-                'categories' => ['cement-concrete', 'ppc-cement'],
+                'categories' => ['cement-concrete'],
             ],
             [
                 'name' => 'TATA Steel',
@@ -173,7 +135,7 @@ class GlobalMasterSeeder extends Seeder
                 'slug' => 'tata-steel',
                 'website' => 'https://www.tatatiscon.co.in',
                 'description' => 'India’s leading brand of superior quality TMT re-bars.',
-                'categories' => ['steel-iron', 'tmt-bars'],
+                'categories' => ['steel-iron'],
             ],
             [
                 'name' => 'Jindal Panther',
@@ -181,7 +143,7 @@ class GlobalMasterSeeder extends Seeder
                 'slug' => 'jindal-panther',
                 'website' => 'https://www.jindalpanther.com',
                 'description' => 'High-strength TMT re-bars and structural steel products.',
-                'categories' => ['steel-iron', 'tmt-bars'],
+                'categories' => ['steel-iron'],
             ],
             [
                 'name' => 'Asian Paints',
@@ -189,7 +151,7 @@ class GlobalMasterSeeder extends Seeder
                 'slug' => 'asian-paints',
                 'website' => 'https://www.asianpaints.com',
                 'description' => 'India’s leading paint and coatings manufacturing company.',
-                'categories' => ['paints-coatings', 'exterior-emulsion'],
+                'categories' => ['paints-coatings'],
             ],
             [
                 'name' => 'Berger',
@@ -197,7 +159,7 @@ class GlobalMasterSeeder extends Seeder
                 'slug' => 'berger-paints',
                 'website' => 'https://www.bergerpaints.com',
                 'description' => 'Innovative decorative paints and industrial coatings.',
-                'categories' => ['paints-coatings', 'exterior-emulsion'],
+                'categories' => ['paints-coatings'],
             ],
             [
                 'name' => 'Kajaria',
@@ -205,7 +167,7 @@ class GlobalMasterSeeder extends Seeder
                 'slug' => 'kajaria-ceramics',
                 'website' => 'https://www.kajariaceramics.com',
                 'description' => 'India’s largest manufacturer of ceramic and vitrified floor and wall tiles.',
-                'categories' => ['tiles-flooring', 'vitrified-tiles'],
+                'categories' => ['tiles-flooring'],
             ],
             [
                 'name' => 'Jaquar',
@@ -221,7 +183,7 @@ class GlobalMasterSeeder extends Seeder
                 'slug' => 'supreme-pipes',
                 'website' => 'https://www.supreme.co.in',
                 'description' => 'Leading producer of PVC, CPVC, drainage, and plumbing piping systems.',
-                'categories' => ['sanitaryware-plumbing', 'pvc-cpvc-pipes'],
+                'categories' => ['sanitaryware-plumbing'],
             ],
         ];
 
@@ -238,7 +200,6 @@ class GlobalMasterSeeder extends Seeder
                 ]
             );
             $brandMap[$b['name']] = $brand->id;
-            // Also map short alias if any
             if (isset($b['code'])) {
                 $brandMap[$b['code']] = $brand->id;
             }
@@ -249,45 +210,45 @@ class GlobalMasterSeeder extends Seeder
             }
         }
 
-        // 6. Seed Sample Products
+        // 5. Seed Sample Products
         $products = [
             [
                 'name' => 'UltraTech OPC 53 Grade Cement',
                 'slug' => 'ultratech-opc-53-grade-cement',
-                'category' => 'opc-cement',
+                'category' => 'cement-concrete',
                 'unit' => 'Bag',
                 'hsn_code' => '252329',
                 'sku' => 'CEM-OPC-53-UT',
-                'brand' => 'UltraTech',
+                'brand' => 'UltraTech Cement',
                 'base_price' => 380.00,
                 'description' => 'UltraTech OPC 53 Grade Cement — 50kg bag. Premium quality Portland cement for all construction purposes.',
             ],
             [
                 'name' => 'ACC Gold OPC 53 Cement',
                 'slug' => 'acc-gold-opc-53-cement',
-                'category' => 'opc-cement',
+                'category' => 'cement-concrete',
                 'unit' => 'Bag',
                 'hsn_code' => '252329',
                 'sku' => 'CEM-OPC-53-ACC',
-                'brand' => 'ACC',
+                'brand' => 'ACC Limited',
                 'base_price' => 370.00,
                 'description' => 'ACC Gold OPC 53 Grade Cement — 50kg bag.',
             ],
             [
                 'name' => 'Ambuja PPC Cement',
                 'slug' => 'ambuja-ppc-cement',
-                'category' => 'ppc-cement',
+                'category' => 'cement-concrete',
                 'unit' => 'Bag',
                 'hsn_code' => '252329',
                 'sku' => 'CEM-PPC-AMB',
-                'brand' => 'Ambuja',
+                'brand' => 'Ambuja Cements',
                 'base_price' => 360.00,
                 'description' => 'Ambuja Portland Pozzolana Cement — 50kg bag.',
             ],
             [
                 'name' => 'TMT Fe-500 12mm Bars',
                 'slug' => 'tmt-fe500-12mm-bars',
-                'category' => 'tmt-bars',
+                'category' => 'steel-iron',
                 'unit' => 'MT',
                 'hsn_code' => '721310',
                 'sku' => 'STL-TMT-12-500',
@@ -298,7 +259,7 @@ class GlobalMasterSeeder extends Seeder
             [
                 'name' => 'TMT Fe-500 8mm Bars',
                 'slug' => 'tmt-fe500-8mm-bars',
-                'category' => 'tmt-bars',
+                'category' => 'steel-iron',
                 'unit' => 'MT',
                 'hsn_code' => '721310',
                 'sku' => 'STL-TMT-8-500',
@@ -309,7 +270,7 @@ class GlobalMasterSeeder extends Seeder
             [
                 'name' => 'Asian Paints Apex Exterior Emulsion (1L)',
                 'slug' => 'asian-paints-apex-exterior-1l',
-                'category' => 'exterior-emulsion',
+                'category' => 'paints-coatings',
                 'unit' => 'Ltr',
                 'hsn_code' => '320910',
                 'sku' => 'PNT-EXT-APEX-1L',
@@ -320,7 +281,7 @@ class GlobalMasterSeeder extends Seeder
             [
                 'name' => 'Berger WeatherCoat Exterior Paint (20L)',
                 'slug' => 'berger-weathercoat-exterior-20l',
-                'category' => 'exterior-emulsion',
+                'category' => 'paints-coatings',
                 'unit' => 'Ltr',
                 'hsn_code' => '320910',
                 'sku' => 'PNT-EXT-BERG-20L',
@@ -331,7 +292,7 @@ class GlobalMasterSeeder extends Seeder
             [
                 'name' => '600x600 Vitrified Floor Tiles (Polished)',
                 'slug' => '600x600-vitrified-floor-tiles-polished',
-                'category' => 'vitrified-tiles',
+                'category' => 'tiles-flooring',
                 'unit' => 'Sqft',
                 'hsn_code' => '690721',
                 'sku' => 'TLE-VIT-600P',
@@ -341,7 +302,6 @@ class GlobalMasterSeeder extends Seeder
             ],
         ];
 
-        // Refresh category map to include subcategories
         $allCategories = Category::pluck('id', 'slug');
 
         foreach ($products as $p) {

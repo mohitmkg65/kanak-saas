@@ -17,14 +17,12 @@ return new class extends Migration
             $table->string('name');
             $table->string('slug')->unique();
             $table->text('description')->nullable();
-            $table->foreignId('parent_id')->nullable()->constrained('categories')->nullOnDelete();
             $table->string('image')->nullable();
             $table->integer('sort_order')->default(0);
             $table->string('status')->default('active');
             $table->foreignId('created_by')->nullable()->constrained('users')->nullOnDelete();
             $table->timestamps();
 
-            $table->index('parent_id');
             $table->index('status');
             $table->index('sort_order');
         });

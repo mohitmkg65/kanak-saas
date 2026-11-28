@@ -26,7 +26,7 @@ test('super admin can view categories list and create page', function () {
     $response = $this->actingAs($this->admin)->get(route('admin.categories.index'));
     $response->assertOk();
     $response->assertSee('Cement &amp; Concrete', false);
-    $response->assertSee('Categories &amp; Subcategories', false);
+    $response->assertSee('Categories');
     $response->assertSee('Add Category');
     $response->assertSee('Save Category');
 

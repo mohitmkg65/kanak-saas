@@ -31,9 +31,7 @@ class CategoryController extends Controller
 
     public function create(): View
     {
-        $parentCategories = Category::parents()->active()->orderBy('name')->get();
-
-        return view('admin.categories.create', compact('parentCategories'));
+        return view('admin.categories.create');
     }
 
     public function store(StoreCategoryRequest $request): RedirectResponse
@@ -51,7 +49,7 @@ class CategoryController extends Controller
             module: 'masters.categories',
             entityType: Category::class,
             entityId: $category->id,
-            newValues: ['name' => $category->name, 'parent_id' => $category->parent_id]
+            newValues: ['name' => $category->name]
         );
 
         return redirect()->route('admin.categories.index')->with('success', 'Category created successfully.');
@@ -67,16 +65,10 @@ class CategoryController extends Controller
 
     protected function getCategoriesQuery(Request $request)
     {
-        $query = Category::with('parent')->withCount('children', 'products');
+        $query = Category::withCount('products');
 
         if ($search = $request->input('search')) {
             $query->where('name', 'like', "%{$search}%");
-        }
-
-        if ($request->input('type') === 'parent') {
-            $query->parents();
-        } elseif ($request->input('type') === 'subcategory') {
-            $query->whereNotNull('parent_id');
         }
 
         if ($status = $request->input('status')) {
@@ -111,11 +103,6 @@ class CategoryController extends Controller
 
     public function destroy(Category $category): RedirectResponse
     {
-        if ($category->children()->exists()) {
-            return redirect()->route('admin.categories.index')
-                ->with('error', 'Cannot delete a category that has subcategories. Please delete or move the subcategories first.');
-        }
-
         if ($category->products()->exists()) {
             return redirect()->route('admin.categories.index')
                 ->with('error', 'Cannot delete a category that has products assigned to it.');
